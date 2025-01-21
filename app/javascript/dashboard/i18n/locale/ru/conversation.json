@@ -12,6 +12,10 @@
     "NO_INBOX_2": " для начала",
     "NO_INBOX_AGENT": "Ой! Похоже, вы не добавлены ни к одному источнику сообщений. Обратитесь к администратору",
     "SEARCH_MESSAGES": "Поиск по сообщениям в диалогах",
+    "EMPTY_STATE": {
+      "CMD_BAR": "открыть меню команд",
+      "KEYBOARD_SHORTCUTS": "для просмотра быстрых клавиш"
+    },
     "SEARCH": {
       "TITLE": "Поиск сообщений",
       "RESULT_TITLE": "Результаты поиска",
@@ -30,7 +34,6 @@
     "ASSIGN_TO_ME": "Назначить мне",
     "TWILIO_WHATSAPP_CAN_REPLY": "Вы можете ответить в этой беседе только с помощью шаблона сообщения",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Ограничение на 24 часа",
-    "SELECT_A_TWEET_TO_REPLY": "Пожалуйста, выберите твит для ответа.",
     "REPLYING_TO": "Вы отвечаете на:",
     "REMOVE_SELECTION": "Удалить выделенное",
     "DOWNLOAD": "Скачать",
@@ -38,11 +41,15 @@
     "SAVE_CONTACT": "Сохранить",
     "UPLOADING_ATTACHMENTS": "Загрузка вложений...",
     "REPLIED_TO_STORY": "Ответил на вашу историю",
+    "UNSUPPORTED_MESSAGE": "Это сообщение не поддерживается.",
+    "UNSUPPORTED_MESSAGE_FACEBOOK": "Это сообщение не поддерживается. Вы можете просмотреть это сообщение в приложении Facebook Messenger.",
+    "UNSUPPORTED_MESSAGE_INSTAGRAM": "Это сообщение не поддерживается. Вы можете просмотреть это сообщение в приложении Instagram.",
     "SUCCESS_DELETE_MESSAGE": "Сообщение успешно удалено",
     "FAIL_DELETE_MESSSAGE": "Не удалось удалить сообщение! Попробуйте еще раз",
     "NO_RESPONSE": "Нет ответа",
     "RATING_TITLE": "Оценка",
     "FEEDBACK_TITLE": "Обратная связь",
+    "REPLY_MESSAGE_NOT_FOUND": "Сообщение недоступно",
     "CARD": {
       "SHOW_LABELS": "Показать метки",
       "HIDE_LABELS": "Скрыть метки"
@@ -54,18 +61,32 @@
       "OPEN": "Открыть",
       "CLOSE": "Закрыть",
       "DETAILS": "подробности",
+      "SNOOZED_UNTIL": "Отложить до",
       "SNOOZED_UNTIL_TOMORROW": "Отложено до завтра",
       "SNOOZED_UNTIL_NEXT_WEEK": "Отложено до следующей недели",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Отложить до следующего ответа"
+      "SNOOZED_UNTIL_NEXT_REPLY": "Отложить до следующего ответа",
+      "SLA_STATUS": {
+        "FRT": "FRT {status}",
+        "NRT": "NRT {status}",
+        "RT": "RT {status}",
+        "MISSED": "пропущенный",
+        "DUE": "до"
+      }
     },
     "RESOLVE_DROPDOWN": {
       "MARK_PENDING": "Отметить как ожидающие",
+      "SNOOZE_UNTIL": "Отложено",
       "SNOOZE": {
         "TITLE": "Отложить до",
         "NEXT_REPLY": "Следующий ответ",
         "TOMORROW": "Завтра",
         "NEXT_WEEK": "На следующей неделе"
       }
+    },
+    "CUSTOM_SNOOZE": {
+      "TITLE": "Отложить до",
+      "APPLY": "Отложено",
+      "CANCEL": "Отменить"
     },
     "PRIORITY": {
       "TITLE": "Приоритет",
@@ -80,7 +101,7 @@
         "SELECT_PLACEHOLDER": "Ничего",
         "INPUT_PLACEHOLDER": "Выберите приоритет",
         "NO_RESULTS": "Результаты не найдены",
-        "SUCCESSFUL": "Изменен приоритет разговора id %{conversationId} на %{priority}",
+        "SUCCESSFUL": "Изменен приоритет разговора id {conversationId} на {priority}",
         "FAILED": "Не удалось изменить приоритет. Пожалуйста, попробуйте еще раз."
       }
     },
@@ -101,15 +122,15 @@
       "ASSIGN_TEAM": "Назначить команду",
       "API": {
         "AGENT_ASSIGNMENT": {
-          "SUCCESFUL": "ID разговора %{conversationId} присвоен \"%{agentName}\"",
+          "SUCCESFUL": "ID разговора {conversationId} присвоен \"{agentName}\"",
           "FAILED": "Не удалось назначить агента. Пожалуйста, попробуйте еще раз."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Назначена метка #%{labelName} в разговор id %{conversationId}",
+          "SUCCESFUL": "Назначена метка #{labelName} в разговор id {conversationId}",
           "FAILED": "Не удалось назначить метку. Пожалуйста, попробуйте еще раз."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Назначена метка #%{team} в разговор id %{conversationId}",
+          "SUCCESFUL": "Назначена метка #{team} в разговор id {conversationId}",
           "FAILED": "Не удалось назначить команду. Пожалуйста, попробуйте еще раз."
         }
       }
@@ -121,14 +142,17 @@
       "MSG_INPUT": "Shift + enter чтобы начать новую строку. Начните с '/', чтобы выбрать шаблонный ответ.",
       "PRIVATE_MSG_INPUT": "Shift + enter для новой строки. Это будет видно только Операторам",
       "MESSAGE_SIGNATURE_NOT_CONFIGURED": "Подпись сообщения не настроена, пожалуйста настройте её в настройках профиля.",
-      "CLICK_HERE": "Нажмите здесь, чтобы обновить"
+      "CLICK_HERE": "Нажмите здесь, чтобы обновить",
+      "WHATSAPP_TEMPLATES": "Шаблоны Whatsapp"
     },
     "REPLYBOX": {
       "REPLY": "Ответить",
       "PRIVATE_NOTE": "Личная заметка",
       "SEND": "Отправить",
       "CREATE": "Добавить заметку",
-      "TWEET": "Твит",
+      "INSERT_READ_MORE": "Читать далее",
+      "DISMISS_REPLY": "Удалить ответ",
+      "REPLYING_TO": "Ответить:",
       "TIP_FORMAT_ICON": "Показать редактор текста",
       "TIP_EMOJI_ICON": "Показать emoji панель",
       "TIP_ATTACH_ICON": "Прикрепить файлы",
@@ -140,6 +164,7 @@
       "STOP_AUDIO_RECORDING": "Остановить запись аудио",
       "": "",
       "EMAIL_HEAD": {
+        "TO": "ДО",
         "ADD_BCC": "Добавить bcc",
         "CC": {
           "LABEL": "CC",
@@ -182,6 +207,7 @@
     },
     "CONTEXT_MENU": {
       "COPY": "Копировать",
+      "REPLY_TO": "Ответить на это сообщение",
       "DELETE": "Удалить",
       "CREATE_A_CANNED_RESPONSE": "Добавить в шаблонные ответы",
       "TRANSLATE": "Перевести",
@@ -213,27 +239,31 @@
     }
   },
   "ONBOARDING": {
-    "TITLE": "Привет 👋, добро пожаловать в %{installationName}!",
-    "DESCRIPTION": "Спасибо за регистрацию. Мы хотим, чтобы вы получили максимум от %{installationName}. Вот несколько вещей, которые вы можете сделать в %{installationName}, чтобы получить ещё больше приятных впечатлений.",
+    "TITLE": "Привет 👋, добро пожаловать в {installationName}!",
+    "DESCRIPTION": "Спасибо за регистрацию. Мы хотим, чтобы вы получили максимум от {installationName}. Вот несколько вещей, которые вы можете сделать в {installationName}, чтобы получить ещё больше приятных впечатлений.",
+    "GREETING_MORNING": "👋 Good morning, {name}. Welcome to {installationName}.",
+    "GREETING_AFTERNOON": "👋 Good afternoon, {name}. Welcome to {installationName}.",
+    "GREETING_EVENING": "👋 Good evening, {name}. Welcome to {installationName}.",
     "READ_LATEST_UPDATES": "Читайте о наших последних обновлениях",
     "ALL_CONVERSATION": {
       "TITLE": "Все ваши диалоги в одном месте",
-      "DESCRIPTION": "Посмотреть все разговоры с клиентами в одной панели управления. Вы можете отфильтровать разговоры по входящему каналу, метке и статусу."
+      "DESCRIPTION": "Посмотреть все разговоры с клиентами в одной панели управления. Вы можете отфильтровать разговоры по входящему каналу, метке и статусу.",
+      "NEW_LINK": "Нажмите здесь, чтобы создать входящий канал"
     },
     "TEAM_MEMBERS": {
       "TITLE": "Пригласить членов вашей команды",
       "DESCRIPTION": "Так как вы готовы общаться с клиентом, пригласите в команду своих товарищей, чтобы помочь вам. Вы можете пригласить своих коллег по команде, добавив их адреса электронной почты в список агентов.",
       "NEW_LINK": "Нажмите здесь, чтобы пригласить члена команды"
     },
-    "INBOXES": {
-      "TITLE": "Подключить входящие",
-      "DESCRIPTION": "Подключите различные каналы, с помощью которых ваши клиенты будут общаться с вами. Это может быть веб-чат в live-чате, Facebook или Twitter, или даже ваш номер WhatsApp.",
-      "NEW_LINK": "Нажмите здесь, чтобы создать входящий канал"
-    },
     "LABELS": {
       "TITLE": "Сгруппировать беседы с помощью меток",
       "DESCRIPTION": "Метки дают более простой способ классифицировать разговор. Создайте несколько меток, например #support-enquiry, #billing-question и т.д., чтобы позже использовать их в беседе.",
       "NEW_LINK": "Нажмите здесь, чтобы создать метки"
+    },
+    "CANNED_RESPONSES": {
+      "TITLE": "Create canned responses",
+      "DESCRIPTION": "Pre-written quick reply templates help you quickly respond to a conversation. Agents can type the '/' character followed by the shortcode to insert a response.",
+      "NEW_LINK": "Click here to create a canned response"
     }
   },
   "CONVERSATION_SIDEBAR": {
@@ -255,6 +285,7 @@
   },
   "CONVERSATION_CUSTOM_ATTRIBUTES": {
     "ADD_BUTTON_TEXT": "Создать атрибут",
+    "NO_RECORDS_FOUND": "Атрибуты не найдены",
     "UPDATE": {
       "SUCCESS": "Атрибут успешно обновлен",
       "ERROR": "Не удается обновить атрибут. Повторите попытку позже"
@@ -286,10 +317,10 @@
     "SIDEBAR_TITLE": "Участники диалога",
     "NO_RECORDS_FOUND": "Результаты не найдены",
     "ADD_PARTICIPANTS": "Выберите участников",
-    "REMANING_PARTICIPANTS_TEXT": "+%{count} другие",
-    "REMANING_PARTICIPANT_TEXT": "+%{count} другие",
-    "TOTAL_PARTICIPANTS_TEXT": "%{count} человек участвуют.",
-    "TOTAL_PARTICIPANT_TEXT": "%{count} человек участвуют.",
+    "REMANING_PARTICIPANTS_TEXT": "+{count} другие",
+    "REMANING_PARTICIPANT_TEXT": "+{count} другие",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} человек участвуют.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} человек участвуют.",
     "NO_PARTICIPANTS_TEXT": "Никто не участвует!.",
     "WATCH_CONVERSATION": "Присоединиться к диалогу",
     "YOU_ARE_WATCHING": "Вы участвуете",

@@ -1,33 +1,3 @@
-<template>
-  <div>
-    <button
-      class="button join-call-button"
-      color-scheme="secondary"
-      :is-loading="isLoading"
-      :style="{
-        background: widgetColor,
-        borderColor: widgetColor,
-        color: textColor,
-      }"
-      @click="joinTheCall"
-    >
-      <fluent-icon icon="video-add" class="mr-2" />
-      {{ $t('INTEGRATIONS.DYTE.CLICK_HERE_TO_JOIN') }}
-    </button>
-    <div v-if="dyteAuthToken" class="video-call--container">
-      <iframe
-        :src="meetingLink"
-        allow="camera;microphone;fullscreen;display-capture;picture-in-picture;clipboard-write;"
-      />
-      <button
-        class="button small join-call-button leave-room-button"
-        @click="leaveTheRoom"
-      >
-        {{ $t('INTEGRATIONS.DYTE.LEAVE_THE_ROOM') }}
-      </button>
-    </div>
-  </div>
-</template>
 <script>
 import IntegrationAPIClient from 'widget/api/integration';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
@@ -65,11 +35,10 @@ export default {
     async joinTheCall() {
       this.isLoading = true;
       try {
-        const {
-          data: { authResponse: { authToken = '' } = {} } = {},
-        } = await IntegrationAPIClient.addParticipantToDyteMeeting(
-          this.messageId
-        );
+        const { data: { authResponse: { authToken = '' } = {} } = {} } =
+          await IntegrationAPIClient.addParticipantToDyteMeeting(
+            this.messageId
+          );
         this.dyteAuthToken = authToken;
       } catch (error) {
         // Ignore Error for now
@@ -83,8 +52,40 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div>
+    <button
+      class="button join-call-button"
+      color-scheme="secondary"
+      :is-loading="isLoading"
+      :style="{
+        background: widgetColor,
+        borderColor: widgetColor,
+        color: textColor,
+      }"
+      @click="joinTheCall"
+    >
+      <FluentIcon icon="video-add" class="mr-2" />
+      {{ $t('INTEGRATIONS.DYTE.CLICK_HERE_TO_JOIN') }}
+    </button>
+    <div v-if="dyteAuthToken" class="video-call--container">
+      <iframe
+        :src="meetingLink"
+        allow="camera;microphone;fullscreen;display-capture;picture-in-picture;clipboard-write;"
+      />
+      <button
+        class="button small join-call-button leave-room-button"
+        @click="leaveTheRoom"
+      >
+        {{ $t('INTEGRATIONS.DYTE.LEAVE_THE_ROOM') }}
+      </button>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
-@import '~widget/assets/scss/variables.scss';
+@import 'widget/assets/scss/variables.scss';
 
 .video-call--container {
   position: fixed;

@@ -1,11 +1,11 @@
 # pre-build stage
-FROM ruby:3.2.2-alpine3.16 AS pre-builder
+FROM ruby:3.3.3-alpine3.19 AS pre-builder
 
 # ARG default to production settings
 # For development docker-compose file overrides ARGS
 ARG BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_WITHOUT ${BUNDLE_WITHOUT}
-ENV BUNDLER_VERSION=2.1.2
+ENV BUNDLER_VERSION=2.5.11
 
 ARG RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_SERVE_STATIC_FILES ${RAILS_SERVE_STATIC_FILES}
@@ -13,20 +13,34 @@ ENV RAILS_SERVE_STATIC_FILES ${RAILS_SERVE_STATIC_FILES}
 ARG RAILS_ENV=production
 ENV RAILS_ENV ${RAILS_ENV}
 
+ARG NODE_OPTIONS="--max-old-space-size=4096 --openssl-legacy-provider"
+ENV NODE_OPTIONS ${NODE_OPTIONS}
+
 ENV BUNDLE_PATH="/gems"
 
 RUN apk update && apk add --no-cache \
-    openssl \
-    tar \
-    build-base \
-    tzdata \
-    postgresql-dev \
-    postgresql-client \
-    nodejs \
-    yarn \
-    git \
+  openssl \
+  tar \
+  build-base \
+  tzdata \
+  postgresql-dev \
+  postgresql-client \
+  nodejs=20.15.1-r0 \
+  git \
   && mkdir -p /var/app \
   && gem install bundler
+
+# Install pnpm and configure environment
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
+    && echo 'export PNPM_HOME="/root/.local/share/pnpm"' >> /root/.shrc \
+    && echo 'export PATH="$PNPM_HOME:$PATH"' >> /root/.shrc \
+    && export PNPM_HOME="/root/.local/share/pnpm" \
+    && export PATH="$PNPM_HOME:$PATH" \
+    && pnpm --version
+
+# Persist the environment variables in Docker
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
@@ -45,8 +59,8 @@ RUN if [ "$RAILS_ENV" = "production" ]; then \
   else bundle install -j 4 -r 3; \
   fi
 
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm i
 
 COPY . /app
 
@@ -64,18 +78,18 @@ RUN if [ "$RAILS_ENV" = "production" ]; then \
 RUN git rev-parse HEAD > /app/.git_sha
 
 # Remove unnecessary files
-RUN rm -rf /gems/ruby/3.2.0/cache/*.gem \
-  && find /gems/ruby/3.2.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete \
+RUN rm -rf /gems/ruby/3.3.0/cache/*.gem \
+  && find /gems/ruby/3.3.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete \
   && rm -rf .git \
   && rm .gitignore
 
 # final build stage
-FROM ruby:3.2.2-alpine3.16
+FROM ruby:3.3.3-alpine3.19
 
 
 ARG BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_WITHOUT ${BUNDLE_WITHOUT}
-ENV BUNDLER_VERSION=2.1.2
+ENV BUNDLER_VERSION=2.5.11
 
 ARG EXECJS_RUNTIME="Disabled"
 ENV EXECJS_RUNTIME ${EXECJS_RUNTIME}
@@ -92,16 +106,20 @@ ENV BUNDLE_PATH="/gems"
 
 RUN apk update && apk add --no-cache \
   build-base \
-    openssl \
-    tzdata \
-    postgresql-client \
-    imagemagick \
-    git \
-    vips \
+  openssl \
+  tzdata \
+  postgresql-client \
+  imagemagick \
+  git \
+  vips \
   && gem install bundler
 
 RUN if [ "$RAILS_ENV" != "production" ]; then \
-  apk add --no-cache nodejs yarn; \
+  apk add --no-cache nodejs=20.15.1-r0; \
+  # Install pnpm and configure environment
+  wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
+  && source /root/.shrc \
+  && pnpm --version; \
   fi
 
 COPY --from=pre-builder /gems/ /gems/

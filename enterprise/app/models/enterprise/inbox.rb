@@ -5,6 +5,10 @@ module Enterprise::Inbox
     super - overloaded_agent_ids
   end
 
+  def active_bot?
+    super || captain_assistant.present?
+  end
+
   private
 
   def get_agent_ids_over_assignment_limit(limit)

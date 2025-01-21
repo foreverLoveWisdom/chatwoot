@@ -12,6 +12,10 @@
     "NO_INBOX_2": " lai sāktu",
     "NO_INBOX_AGENT": "Ak, vai! Izskatās, ka Jūs neesat nevienas iesūtnes dalībnieks. Lūdzu, sazinieties ar savu administratoru",
     "SEARCH_MESSAGES": "Meklēt ziņojumus sarunās",
+    "EMPTY_STATE": {
+      "CMD_BAR": "lai atvērtu komandu izvēlni",
+      "KEYBOARD_SHORTCUTS": "lai skatītu klaviatūras īsinājumtaustiņus"
+    },
     "SEARCH": {
       "TITLE": "Meklēt ziņojumus",
       "RESULT_TITLE": "Meklēšanas Rezultāti",
@@ -30,7 +34,6 @@
     "ASSIGN_TO_ME": "Piešķirt sev",
     "TWILIO_WHATSAPP_CAN_REPLY": "Jūs varat atbildēt uz šo sarunu, tikai izmantojot veidnes ziņojumu, jo",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "24 stundu ziņojuma loga ierobežojums",
-    "SELECT_A_TWEET_TO_REPLY": "Lūdzu, izvēlieties tvītu, uz kuru atbildēt.",
     "REPLYING_TO": "Jūs atbildat uz:",
     "REMOVE_SELECTION": "Noņemt Izvēli",
     "DOWNLOAD": "Lejupielādēt",
@@ -38,11 +41,15 @@
     "SAVE_CONTACT": "Saglabāt",
     "UPLOADING_ATTACHMENTS": "Notiek pielikumu augšupielāde...",
     "REPLIED_TO_STORY": "Atbildēja uz Jūsu stāstu",
+    "UNSUPPORTED_MESSAGE": "Šis ziņojums netiek atbalstīts.",
+    "UNSUPPORTED_MESSAGE_FACEBOOK": "Šis ziņojums netiek atbalstīts. Šo ziņojumu Jūs varat apskatīt lietotnē Facebook Messenger.",
+    "UNSUPPORTED_MESSAGE_INSTAGRAM": "Šis ziņojums netiek atbalstīts. Šo ziņojumu Jūs varat apskatīt lietotnē Instagram.",
     "SUCCESS_DELETE_MESSAGE": "Ziņojums veiksmīgi izdzēsts",
     "FAIL_DELETE_MESSSAGE": "Nevarēja izdzēst ziņojumu! Mēģiniet vēlreiz",
     "NO_RESPONSE": "Nav atbildes",
     "RATING_TITLE": "Vērtējums",
     "FEEDBACK_TITLE": "Atsauksmes",
+    "REPLY_MESSAGE_NOT_FOUND": "Ziņa nav pieejama",
     "CARD": {
       "SHOW_LABELS": "Rādīt etiķetes",
       "HIDE_LABELS": "Slēpt etiķetes"
@@ -54,18 +61,32 @@
       "OPEN": "Papildu",
       "CLOSE": "Aizvērt",
       "DETAILS": "detalizēta informācija",
+      "SNOOZED_UNTIL": "Atlikts līdz",
       "SNOOZED_UNTIL_TOMORROW": "Atlikts līdz rītdienai",
       "SNOOZED_UNTIL_NEXT_WEEK": "Atlikts līdz nākamajai nedēļai",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Atlikts līdz nākamajai atbildei"
+      "SNOOZED_UNTIL_NEXT_REPLY": "Atlikts līdz nākamajai atbildei",
+      "SLA_STATUS": {
+        "FRT": "FRT {status}",
+        "NRT": "NRT {status}",
+        "RT": "RT {status}",
+        "MISSED": "nokavēti",
+        "DUE": "jābeidz"
+      }
     },
     "RESOLVE_DROPDOWN": {
       "MARK_PENDING": "Atzīmēt kā neapstiprinātu",
+      "SNOOZE_UNTIL": "Atlikt",
       "SNOOZE": {
         "TITLE": "Atlikt līdz",
         "NEXT_REPLY": "Nākamā atbilde",
         "TOMORROW": "Rītdiena",
         "NEXT_WEEK": "Nākamā nedēļa"
       }
+    },
+    "CUSTOM_SNOOZE": {
+      "TITLE": "Atlikt līdz",
+      "APPLY": "Atlikt",
+      "CANCEL": "Atcelt"
     },
     "PRIORITY": {
       "TITLE": "Prioritāte",
@@ -80,7 +101,7 @@
         "SELECT_PLACEHOLDER": "Nav",
         "INPUT_PLACEHOLDER": "Izvēlieties prioritāti",
         "NO_RESULTS": "Nav atrasts",
-        "SUCCESSFUL": "Sarunas Id %{conversationId} prioritāte nomainīta uz %{priority}",
+        "SUCCESSFUL": "Sarunas Id {conversationId} prioritāte nomainīta uz {priority}",
         "FAILED": "Nevarēja nomainīt prioritāti. Lūdzu, mēģiniet vēlreiz."
       }
     },
@@ -101,15 +122,15 @@
       "ASSIGN_TEAM": "Piešķirt komandu",
       "API": {
         "AGENT_ASSIGNMENT": {
-          "SUCCESFUL": "Sarunas ID %{conversationId} piešķirts \"%{agentName}\"",
+          "SUCCESFUL": "Sarunas ID {conversationId} piešķirts \"{agentName}\"",
           "FAILED": "Nevarēja piešķirt aģentu. Lūdzu, mēģiniet vēlreiz."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Sarunai ar ID %{conversationId} tika piešķirta etiķete #%{labelName}",
+          "SUCCESFUL": "Sarunai ar ID {conversationId} tika piešķirta etiķete #{labelName}",
           "FAILED": "Nevarēja piešķirt etiķeti. Lūdzu, mēģiniet vēlreiz."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Sarunai ar ID %{conversationId} tika piešķirta komanda \"%{team}\"",
+          "SUCCESFUL": "Sarunai ar ID {conversationId} tika piešķirta komanda \"{team}\"",
           "FAILED": "Nevarēja piešķirt komandu. Lūdzu, mēģiniet vēlreiz."
         }
       }
@@ -121,14 +142,17 @@
       "MSG_INPUT": "Shift + Enter, lai pārietu uz jaunu rindu. Sāciet ar '/' lai izvēlētos sagatavotu atbildi.",
       "PRIVATE_MSG_INPUT": "Shift + Enter, lai pārietu uz jaunu rindu. Ziņojums būs redzams tikai Aģentiem",
       "MESSAGE_SIGNATURE_NOT_CONFIGURED": "Ziņojuma paraksts nav nokonfigurēts. Lūdzu, nokonfigurējiet to profila iestatījumos.",
-      "CLICK_HERE": "Noklikšķiniet šeit, lai atjauninātu"
+      "CLICK_HERE": "Noklikšķiniet šeit, lai atjauninātu",
+      "WHATSAPP_TEMPLATES": "WhatsApp Veidnes"
     },
     "REPLYBOX": {
       "REPLY": "Atbildēt",
       "PRIVATE_NOTE": "Privāta Piezīme",
       "SEND": "Nosūtīt",
       "CREATE": "Pievienot Piezīmi",
-      "TWEET": "Tvīts",
+      "INSERT_READ_MORE": "Lasīt vairāk",
+      "DISMISS_REPLY": "Noraidīt atbildi",
+      "REPLYING_TO": "Atbildot uz:",
       "TIP_FORMAT_ICON": "Rādīt bagātinātā teksta redaktoru",
       "TIP_EMOJI_ICON": "Rādīt emocijzīmju atlasītāju",
       "TIP_ATTACH_ICON": "Pievienot failus",
@@ -140,6 +164,7 @@
       "STOP_AUDIO_RECORDING": "Apturēt audio ierakstīšanu",
       "": "",
       "EMAIL_HEAD": {
+        "TO": "KAM",
         "ADD_BCC": "Pievienot bcc",
         "CC": {
           "LABEL": "CC",
@@ -182,6 +207,7 @@
     },
     "CONTEXT_MENU": {
       "COPY": "Kopēt",
+      "REPLY_TO": "Atbildēt uz šo ziņojumu",
       "DELETE": "Dzēst",
       "CREATE_A_CANNED_RESPONSE": "Pievienot sagatavotajām atbildēm",
       "TRANSLATE": "Tulkot",
@@ -213,27 +239,31 @@
     }
   },
   "ONBOARDING": {
-    "TITLE": "Sveicināti 👋, Laipni lūdzam %{installationName}!",
-    "DESCRIPTION": "Paldies, ka reģistrējāties. Mēs vēlamies, lai Jūs gūtu maksimālu labumu no %{installationName}. Šeit ir dažas lietas, ko varat darīt %{installationName} lai Jūsu pieredze būtu patīkamāka.",
+    "TITLE": "Sveicināti 👋, Laipni lūdzam {installationName}!",
+    "DESCRIPTION": "Paldies, ka reģistrējāties. Mēs vēlamies, lai Jūs gūtu maksimālu labumu no {installationName}. Šeit ir dažas lietas, ko varat darīt {installationName} lai Jūsu pieredze būtu patīkamāka.",
+    "GREETING_MORNING": "👋 Labrīt, {name}. Laipni lūdzam {installationName}.",
+    "GREETING_AFTERNOON": "👋 Labdien, {name}. Laipni lūdzam {installationName}.",
+    "GREETING_EVENING": "👋 Labvakar, {name}. Laipni lūdzam {installationName}.",
     "READ_LATEST_UPDATES": "Izlasīt mūsu aktuālākos jaunumus",
     "ALL_CONVERSATION": {
       "TITLE": "Visas Jūsu sarunas vienuviet",
-      "DESCRIPTION": "Skatīt visas sarunas ar klientiem vienā informācijas panelī. Jūs varat filtrēt sarunas pēc ienākošā kanāla, etiķetes un statusa."
+      "DESCRIPTION": "Skatīt visas sarunas ar klientiem vienā informācijas panelī. Jūs varat filtrēt sarunas pēc ienākošā kanāla, etiķetes un statusa.",
+      "NEW_LINK": "Noklikšķiniet šeit, lai izveidotu iesūtni"
     },
     "TEAM_MEMBERS": {
       "TITLE": "Uzaicināt savas komandas biedrus",
       "DESCRIPTION": "Tā kā Jūs gatavojaties runāt ar savu klientu, piesaistiet savus komandas biedrus, lai viņi Jums palīdzētu. Jūs varat uzaicināt savus komandas biedrus, pievienojot viņu e-pasta adreses aģentu sarakstam.",
       "NEW_LINK": "Noklikšķiniet šeit, lai uzaicinātu komandas biedru"
     },
-    "INBOXES": {
-      "TITLE": "Pievienot Iesūtnes",
-      "DESCRIPTION": "Pievienot dažādus kanālus, caur kuriem Jūsu klienti ar Jums runās. Tie var būt tīmekļa vietņu tiešraides tērzētavas, Jūsu Facebook vai Twitter lapa, vai pat jūsu WhatsApp numurs.",
-      "NEW_LINK": "Noklikšķiniet šeit, lai izveidotu iesūtni"
-    },
     "LABELS": {
       "TITLE": "Organizēt sarunas ar etiķetēm",
       "DESCRIPTION": "Etiķetes nodrošina vienkāršāku veidu, kā klasificēt sarunu. Izveidojiet dažas etiķetes, piemēram, #atbalsta-pieprasījums, #norēķinu-jautājums utt., lai vēlāk varētu tās izmantot sarunas laikā.",
       "NEW_LINK": "Noklikšķiniet šeit, lai izveidotu atzīmes"
+    },
+    "CANNED_RESPONSES": {
+      "TITLE": "Izveidot sagatavotas atbildes",
+      "DESCRIPTION": "Iepriekš sagatavotas atbildes veidnes palīdz ātri reaģēt uz sarunu. Aģenti var izmantot '/' rakstzīmi, kurai seko kods, lai ievietotu atbildi.",
+      "NEW_LINK": "Noklikšķiniet šeit, lai izveidotu sagatavotu atbildi"
     }
   },
   "CONVERSATION_SIDEBAR": {
@@ -255,6 +285,7 @@
   },
   "CONVERSATION_CUSTOM_ATTRIBUTES": {
     "ADD_BUTTON_TEXT": "Izveidot Īpašību",
+    "NO_RECORDS_FOUND": "Īpašības nav atrastas",
     "UPDATE": {
       "SUCCESS": "Īpašība ir veiksmīgi atjaunināta",
       "ERROR": "Nevar atjaunināt īpašību. Lūdzu, pamēģiniet vēlāk vēlreiz"
@@ -286,10 +317,10 @@
     "SIDEBAR_TITLE": "Sarunas dalībnieki",
     "NO_RECORDS_FOUND": "Nav atrasts",
     "ADD_PARTICIPANTS": "Izvēlieties dalībniekus",
-    "REMANING_PARTICIPANTS_TEXT": "+%{count} citi",
-    "REMANING_PARTICIPANT_TEXT": "+%{count} cits",
-    "TOTAL_PARTICIPANTS_TEXT": "%{count} cilvēki piedalās.",
-    "TOTAL_PARTICIPANT_TEXT": "%{count} persona piedalās.",
+    "REMANING_PARTICIPANTS_TEXT": "+{count} citi",
+    "REMANING_PARTICIPANT_TEXT": "+{count} cits",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} cilvēki piedalās.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} persona piedalās.",
     "NO_PARTICIPANTS_TEXT": "Neviens nepiedalās!",
     "WATCH_CONVERSATION": "Pievienoties sarunai",
     "YOU_ARE_WATCHING": "Jūs piedalāties",

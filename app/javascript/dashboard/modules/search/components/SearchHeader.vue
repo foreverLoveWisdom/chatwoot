@@ -1,28 +1,7 @@
-<template>
-  <div class="input-container" :class="{ 'is-focused': isInputFocused }">
-    <div class="icon-container">
-      <fluent-icon icon="search" class="icon" aria-hidden="true" />
-    </div>
-    <input
-      ref="searchInput"
-      type="search"
-      :placeholder="$t('SEARCH.INPUT_PLACEHOLDER')"
-      :value="searchQuery"
-      @focus="onFocus"
-      @blur="onBlur"
-      @input="debounceSearch"
-    />
-    <woot-label
-      :title="$t('SEARCH.PLACEHOLDER_KEYBINDING')"
-      :show-close="false"
-      small
-      class="helper-label"
-    />
-  </div>
-</template>
-
 <script>
 export default {
+  emits: ['search'],
+
   data() {
     return {
       searchQuery: '',
@@ -33,7 +12,7 @@ export default {
     this.$refs.searchInput.focus();
     document.addEventListener('keydown', this.handler);
   },
-  beforeDestroy() {
+  unmounted() {
     document.removeEventListener('keydown', this.handler);
   },
   methods: {
@@ -70,40 +49,40 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import 'app/javascript/dashboard/assets/scss/_mixins.scss';
-.input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: var(--space-small) var(--space-normal);
-  border: 1px solid var(--s-100);
-  border-radius: var(--border-radius-small);
-  transition: border-bottom 0.2s ease-in-out;
-
-  input[type='search'] {
-    @include ghost-input;
-    width: 100%;
-    margin: 0;
-  }
-
-  &.is-focused {
-    border-color: var(--w-100);
-
-    .icon {
-      color: var(--w-400);
-    }
-  }
-}
-.icon-container {
-  display: flex;
-  align-items: center;
-  .icon {
-    color: var(--s-400);
-  }
-}
-
-.helper-label {
-  margin: 0;
-}
-</style>
+<template>
+  <div
+    class="input-container rounded-xl transition-[border-bottom] duration-[0.2s] ease-[ease-in-out] relative flex items-center py-2 px-4 h-14 gap-2 border border-solid"
+    :class="{
+      'border-n-brand': isInputFocused,
+      'border-n-weak': !isInputFocused,
+    }"
+  >
+    <div class="flex items-center">
+      <fluent-icon
+        icon="search"
+        class="icon"
+        aria-hidden="true"
+        :class="{
+          'text-n-blue-text': isInputFocused,
+          'text-n-slate-10': !isInputFocused,
+        }"
+      />
+    </div>
+    <input
+      ref="searchInput"
+      type="search"
+      class="w-full m-0 bg-transparent border-transparent shadow-none text-n-slate-12 dark:text-n-slate-12 active:border-transparent active:shadow-none hover:border-transparent hover:shadow-none focus:border-transparent focus:shadow-none"
+      :placeholder="$t('SEARCH.INPUT_PLACEHOLDER')"
+      :value="searchQuery"
+      @focus="onFocus"
+      @blur="onBlur"
+      @input="debounceSearch"
+    />
+    <woot-label
+      :title="$t('SEARCH.PLACEHOLDER_KEYBINDING')"
+      :show-close="false"
+      small
+      class="!m-0 whitespace-nowrap !bg-n-slate-3 dark:!bg-n-solid-3 !border-n-weak dark:!border-n-strong"
+    />
+  </div>
+</template>
