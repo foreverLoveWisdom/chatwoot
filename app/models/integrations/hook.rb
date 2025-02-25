@@ -6,7 +6,7 @@
 #  access_token :string
 #  hook_type    :integer          default("account")
 #  settings     :jsonb
-#  status       :integer          default("disabled")
+#  status       :integer          default("enabled")
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  account_id   :integer
@@ -19,6 +19,7 @@ class Integrations::Hook < ApplicationRecord
 
   attr_readonly :app_id, :account_id, :inbox_id, :hook_type
   before_validation :ensure_hook_type
+
   validates :account_id, presence: true
   validates :app_id, presence: true
   validates :inbox_id, presence: true, if: -> { hook_type == 'inbox' }
@@ -43,6 +44,10 @@ class Integrations::Hook < ApplicationRecord
     app_id == 'slack'
   end
 
+  def dialogflow?
+    app_id == 'dialogflow'
+  end
+
   def disable
     update(status: 'disabled')
   end
@@ -52,7 +57,7 @@ class Integrations::Hook < ApplicationRecord
     when 'openai'
       Integrations::Openai::ProcessorService.new(hook: self, event: event).perform if app_id == 'openai'
     else
-      'No processor found'
+      { error: 'No processor found' }
     end
   end
 
