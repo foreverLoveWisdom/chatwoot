@@ -1,6 +1,9 @@
 require 'rails_helper'
+require Rails.root.join 'spec/models/concerns/reauthorizable_shared.rb'
 
 RSpec.describe Integrations::Hook do
+  it_behaves_like 'reauthorizable'
+
   context 'with validations' do
     it { is_expected.to validate_presence_of(:app_id) }
     it { is_expected.to validate_presence_of(:account_id) }
@@ -34,7 +37,7 @@ RSpec.describe Integrations::Hook do
 
     it 'returns no processor found for hooks with out processor defined' do
       hook = create(:integrations_hook, account: account)
-      expect(hook.process_event(params)).to eq('No processor found')
+      expect(hook.process_event(params)).to eq({ :error => 'No processor found' })
     end
 
     it 'returns results from procesor for openai hook' do
