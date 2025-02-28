@@ -12,6 +12,10 @@
     "NO_INBOX_2": " til að byrja",
     "NO_INBOX_AGENT": "Uh Ó! Þú virðist ekki vera hluti af neinu innhólfi. Vinsamlegast hafðu samband við kerfisstjóra",
     "SEARCH_MESSAGES": "Leita að skilaboðum í samtölum",
+    "EMPTY_STATE": {
+      "CMD_BAR": "to open command menu",
+      "KEYBOARD_SHORTCUTS": "to view keyboard shortcuts"
+    },
     "SEARCH": {
       "TITLE": "Leita í skilaboðum",
       "RESULT_TITLE": "Leitarniðurstöður",
@@ -30,19 +34,30 @@
     "ASSIGN_TO_ME": "Úthluta á mig",
     "TWILIO_WHATSAPP_CAN_REPLY": "Þú getur aðeins svarað þessu samtali með því að nota sniðmátskilaboð vegna þess að",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "24 hour message window restriction",
-    "SELECT_A_TWEET_TO_REPLY": "Please select a tweet to reply to.",
     "REPLYING_TO": "You are replying to:",
     "REMOVE_SELECTION": "Remove Selection",
     "DOWNLOAD": "Sækja",
     "UNKNOWN_FILE_TYPE": "Óþekkt skrá",
-    "SAVE_CONTACT": "Save",
+    "SAVE_CONTACT": "Save Contact",
+    "NO_CONTENT": "No content to display",
+    "SHARED_ATTACHMENT": {
+      "CONTACT": "{sender} has shared a contact",
+      "LOCATION": "{sender} has shared a location",
+      "FILE": "{sender} has shared a file",
+      "MEETING": "{sender} has started a meeting"
+    },
     "UPLOADING_ATTACHMENTS": "Hleður upp viðhengi...",
     "REPLIED_TO_STORY": "Replied to your story",
+    "UNSUPPORTED_MESSAGE": "This message is unsupported. You can view this message on the Facebook / Instagram app.",
+    "UNSUPPORTED_MESSAGE_FACEBOOK": "This message is unsupported. You can view this message on the Facebook Messenger app.",
+    "UNSUPPORTED_MESSAGE_INSTAGRAM": "This message is unsupported. You can view this message on the Instagram app.",
     "SUCCESS_DELETE_MESSAGE": "Skilaboðum eytt",
     "FAIL_DELETE_MESSSAGE": "Gat ekki eytt skilaboðum! Reynið aftur",
     "NO_RESPONSE": "Ekkert svar",
+    "RESPONSE": "Response",
     "RATING_TITLE": "Rating",
     "FEEDBACK_TITLE": "Endurgjöf",
+    "REPLY_MESSAGE_NOT_FOUND": "Message not available",
     "CARD": {
       "SHOW_LABELS": "Show labels",
       "HIDE_LABELS": "Hide labels"
@@ -54,18 +69,32 @@
       "OPEN": "More",
       "CLOSE": "Close",
       "DETAILS": "details",
+      "SNOOZED_UNTIL": "Snoozed until",
       "SNOOZED_UNTIL_TOMORROW": "Snoozed until tomorrow",
       "SNOOZED_UNTIL_NEXT_WEEK": "Snoozed until next week",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Snoozed until next reply"
+      "SNOOZED_UNTIL_NEXT_REPLY": "Snoozed until next reply",
+      "SLA_STATUS": {
+        "FRT": "FRT {status}",
+        "NRT": "NRT {status}",
+        "RT": "RT {status}",
+        "MISSED": "missed",
+        "DUE": "due"
+      }
     },
     "RESOLVE_DROPDOWN": {
       "MARK_PENDING": "Mark as pending",
+      "SNOOZE_UNTIL": "Snooze",
       "SNOOZE": {
         "TITLE": "Snooze until",
         "NEXT_REPLY": "Next reply",
         "TOMORROW": "Tomorrow",
         "NEXT_WEEK": "Next week"
       }
+    },
+    "CUSTOM_SNOOZE": {
+      "TITLE": "Snooze until",
+      "APPLY": "Snooze",
+      "CANCEL": "Hætta við"
     },
     "PRIORITY": {
       "TITLE": "Priority",
@@ -80,7 +109,7 @@
         "SELECT_PLACEHOLDER": "Enginn",
         "INPUT_PLACEHOLDER": "Select priority",
         "NO_RESULTS": "Engar niðurstöður fundust",
-        "SUCCESSFUL": "Changed priority of conversation id %{conversationId} to %{priority}",
+        "SUCCESSFUL": "Changed priority of conversation id {conversationId} to {priority}",
         "FAILED": "Couldn't change priority. Please try again."
       }
     },
@@ -88,6 +117,7 @@
       "PENDING": "Mark as pending",
       "RESOLVED": "Mark as resolved",
       "MARK_AS_UNREAD": "Mark as unread",
+      "MARK_AS_READ": "Mark as read",
       "REOPEN": "Enduropna samtal",
       "SNOOZE": {
         "TITLE": "Snooze",
@@ -101,15 +131,15 @@
       "ASSIGN_TEAM": "Assign team",
       "API": {
         "AGENT_ASSIGNMENT": {
-          "SUCCESFUL": "Samtalsauðkenni %{conversationId} úthlutað á „%{agentName}“",
+          "SUCCESFUL": "Samtalsauðkenni {conversationId} úthlutað á „{agentName}“",
           "FAILED": "Couldn't assign agent. Please try again."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Úthlutaði flokki #%{labelName} á samtalsauðkenni %{conversationId}",
+          "SUCCESFUL": "Assigned label #{labelName} to conversation id {conversationId}",
           "FAILED": "Couldn't assign label. Please try again."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Úthlutaði teymi #%{team} á samtalsauðkenni %{conversationId}",
+          "SUCCESFUL": "Úthlutaði teymi #{team} á samtalsauðkenni {conversationId}",
           "FAILED": "Couldn't assign team. Please try again."
         }
       }
@@ -121,14 +151,17 @@
       "MSG_INPUT": "Shift + enter fyrir nýja línu. Byrjaðu á '/' til að velja tilbúið svar.",
       "PRIVATE_MSG_INPUT": "Shift + enter fyrir nýja línu. Þetta verður aðeins sýnilegt fyrir þjónustufulltrúa",
       "MESSAGE_SIGNATURE_NOT_CONFIGURED": "Skilaboðundirskrift er ekki stillt, vinsamlegast stilltu hana í prófílstillingum.",
-      "CLICK_HERE": "Click here to update"
+      "CLICK_HERE": "Click here to update",
+      "WHATSAPP_TEMPLATES": "Whatsapp Templates"
     },
     "REPLYBOX": {
       "REPLY": "Reply",
       "PRIVATE_NOTE": "Private Note",
       "SEND": "Send",
       "CREATE": "Add Note",
-      "TWEET": "Tweet",
+      "INSERT_READ_MORE": "Read more",
+      "DISMISS_REPLY": "Dismiss reply",
+      "REPLYING_TO": "Replying to:",
       "TIP_FORMAT_ICON": "Show rich text editor",
       "TIP_EMOJI_ICON": "Show emoji selector",
       "TIP_ATTACH_ICON": "Bæta við viðhengjum",
@@ -140,6 +173,7 @@
       "STOP_AUDIO_RECORDING": "Stoppa hljóðupptöku",
       "": "",
       "EMAIL_HEAD": {
+        "TO": "TO",
         "ADD_BCC": "Bæta við bcc",
         "CC": {
           "LABEL": "CC",
@@ -182,6 +216,7 @@
     },
     "CONTEXT_MENU": {
       "COPY": "Afrita",
+      "REPLY_TO": "Reply to this message",
       "DELETE": "Eyða",
       "CREATE_A_CANNED_RESPONSE": "Bæta við stöðluðu svari",
       "TRANSLATE": "Translate",
@@ -193,6 +228,10 @@
         "DELETE": "Eyða",
         "CANCEL": "Hætta við"
       }
+    },
+    "SIDEBAR": {
+      "CONTACT": "Contact",
+      "COPILOT": "Copilot"
     }
   },
   "EMAIL_TRANSCRIPT": {
@@ -213,27 +252,31 @@
     }
   },
   "ONBOARDING": {
-    "TITLE": "Velkomin/n á %{installationName}!",
-    "DESCRIPTION": "Takk fyrir að skrá þig. Við viljum að þú fáir sem mest út úr %{installationName}. Hér eru nokkur atriði sem þú getur gert í %{installationName} til að gera upplifunina ánægjulega.",
+    "TITLE": "Velkomin/n á {installationName}!",
+    "DESCRIPTION": "Takk fyrir að skrá þig. Við viljum að þú fáir sem mest út úr {installationName}. Hér eru nokkur atriði sem þú getur gert í {installationName} til að gera upplifunina ánægjulega.",
+    "GREETING_MORNING": "👋 Good morning, {name}. Welcome to {installationName}.",
+    "GREETING_AFTERNOON": "👋 Good afternoon, {name}. Welcome to {installationName}.",
+    "GREETING_EVENING": "👋 Good evening, {name}. Welcome to {installationName}.",
     "READ_LATEST_UPDATES": "Sjáðu nýjustu uppfærslurnar okkar",
     "ALL_CONVERSATION": {
       "TITLE": "Öll samtölin þin á einum stað",
-      "DESCRIPTION": "Skoðaðu öll samtöl viðskiptavina þinna á einu mælaborði. Þú getur síað samtölin eftir innkominni rás, merkingu og stöðu."
+      "DESCRIPTION": "Skoðaðu öll samtöl viðskiptavina þinna á einu mælaborði. Þú getur síað samtölin eftir innkominni rás, merkingu og stöðu.",
+      "NEW_LINK": "Smelltu hér til að bæta við innhólfi"
     },
     "TEAM_MEMBERS": {
       "TITLE": "Bjóða í teymið",
       "DESCRIPTION": "Þar sem þú ert að búa þig undir að tala við viðskiptavini þína skaltu fá samstarfsfélaga þína til að aðstoða þig. Þú getur boðið samstarfsfélögum þínum með því að bæta netföngum þeirra við þjónustufulltrúalistann.",
       "NEW_LINK": "Smelltu hér til að bjóða meðlim í teymið"
     },
-    "INBOXES": {
-      "TITLE": "Tengja Innhólf",
-      "DESCRIPTION": "Tengdu ýmsar rásir þar sem viðskiptavinir þínir myndu tala við þig. Það getur verið netspjall á vefsíðu, Facebook eða Twitter síðan þín eða jafnvel WhatsApp númerið þitt.",
-      "NEW_LINK": "Smelltu hér til að bæta við innhólfi"
-    },
     "LABELS": {
       "TITLE": "Flokkaðu samtöl með merkjum",
       "DESCRIPTION": "Merkingar eru auðveldari leið til að flokka samtalið þitt. Búðu til merki eins og #support-enquiry, #billing-question o.s.frv., svo þú getir notað þau í samtali síðar.",
       "NEW_LINK": "Smelltu hér til að búa til merki"
+    },
+    "CANNED_RESPONSES": {
+      "TITLE": "Create canned responses",
+      "DESCRIPTION": "Pre-written quick reply templates help you quickly respond to a conversation. Agents can type the '/' character followed by the shortcode to insert a response.",
+      "NEW_LINK": "Click here to create a canned response"
     }
   },
   "CONVERSATION_SIDEBAR": {
@@ -255,6 +298,7 @@
   },
   "CONVERSATION_CUSTOM_ATTRIBUTES": {
     "ADD_BUTTON_TEXT": "Create attribute",
+    "NO_RECORDS_FOUND": "Engir eiginleikar fundust",
     "UPDATE": {
       "SUCCESS": "Eiginleika breytt",
       "ERROR": "Ekki er hægt að uppfæra eigindina. Vinsamlegast reyndu aftur síðar"
@@ -279,17 +323,18 @@
     "TO": "Til",
     "BCC": "Bcc",
     "CC": "Cc",
-    "SUBJECT": "Subject"
+    "SUBJECT": "Subject",
+    "EXPAND": "Expand email"
   },
   "CONVERSATION_PARTICIPANTS": {
     "SIDEBAR_MENU_TITLE": "Participating",
     "SIDEBAR_TITLE": "Conversation participants",
     "NO_RECORDS_FOUND": "Engar niðurstöður fundust",
     "ADD_PARTICIPANTS": "Select participants",
-    "REMANING_PARTICIPANTS_TEXT": "+%{count} others",
-    "REMANING_PARTICIPANT_TEXT": "+%{count} other",
-    "TOTAL_PARTICIPANTS_TEXT": "%{count} people are participating.",
-    "TOTAL_PARTICIPANT_TEXT": "%{count} person is participating.",
+    "REMANING_PARTICIPANTS_TEXT": "+{count} others",
+    "REMANING_PARTICIPANT_TEXT": "+{count} other",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} people are participating.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} person is participating.",
     "NO_PARTICIPANTS_TEXT": "No one is participating!.",
     "WATCH_CONVERSATION": "Join conversation",
     "YOU_ARE_WATCHING": "You are participating",
@@ -304,5 +349,16 @@
     "ORIGINAL_CONTENT": "Original Content",
     "TRANSLATED_CONTENT": "Translated Content",
     "NO_TRANSLATIONS_AVAILABLE": "No translations are available for this content"
+  },
+  "TYPING": {
+    "ONE": "{user} is typing",
+    "TWO": "{user} and {secondUser} are typing",
+    "MULTIPLE": "{user} and {count} others are typing"
+  },
+  "COPILOT": {
+    "TRY_THESE_PROMPTS": "Try these prompts"
+  },
+  "GALLERY_VIEW": {
+    "ERROR_DOWNLOADING": "Unable to download attachment. Please try again"
   }
 }
