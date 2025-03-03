@@ -194,6 +194,20 @@ RSpec.describe 'Api::V1::Accounts::Articles', type: :request do
         expect(json_response['payload'].count).to be 2
       end
 
+      it 'get all articles with uncategorized articles' do
+        article2 = create(:article, account_id: account.id, portal: portal, category: nil, locale: 'en', author_id: agent.id)
+        expect(article2.id).not_to be_nil
+
+        get "/api/v1/accounts/#{account.id}/portals/#{portal.slug}/articles",
+            headers: agent.create_new_auth_token,
+            params: {}
+        expect(response).to have_http_status(:success)
+        json_response = response.parsed_body
+        expect(json_response['payload'].count).to be 2
+        expect(json_response['payload'][0]['id']).to eq article2.id
+        expect(json_response['payload'][0]['category']['id']).to be_nil
+      end
+
       it 'get all articles with searched params' do
         article2 = create(:article, account_id: account.id, portal: portal, category: category, author_id: agent.id)
         expect(article2.id).not_to be_nil
@@ -257,24 +271,6 @@ RSpec.describe 'Api::V1::Accounts::Articles', type: :request do
         associated_articles_ids = json_response['payload']['associated_articles'].pluck('id')
         expect(associated_articles_ids).to contain_exactly(child_article_1.id, child_article_2.id)
         expect(json_response['payload']['id']).to eq(root_article.id)
-      end
-    end
-
-    describe 'Upload an image' do
-      let(:article) { create(:article, account_id: account.id, category_id: category.id, portal_id: portal.id, author_id: agent.id) }
-
-      it 'update the article with an image' do
-        file = fixture_file_upload(Rails.root.join('spec/assets/avatar.png'), 'image/png')
-
-        post "/api/v1/accounts/#{account.id}/portals/#{article.portal.slug}/articles/attach_file",
-             headers: agent.create_new_auth_token,
-             params: { background_image: file }
-
-        expect(response).to have_http_status(:success)
-
-        blob = response.parsed_body
-
-        expect(blob['file_url']).to be_present
       end
     end
   end

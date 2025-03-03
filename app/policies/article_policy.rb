@@ -23,10 +23,6 @@ class ArticlePolicy < ApplicationPolicy
     @account_user.administrator? || portal_member?
   end
 
-  def attach_file?
-    @account_user.administrator? || portal_member?
-  end
-
   def reorder?
     @account_user.administrator? || portal_member?
   end
@@ -37,3 +33,5 @@ class ArticlePolicy < ApplicationPolicy
     @record.first.portal.members.include?(@user)
   end
 end
+
+ArticlePolicy.prepend_mod_with('Enterprise::ArticlePolicy')

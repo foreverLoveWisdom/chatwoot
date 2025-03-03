@@ -4,17 +4,33 @@ import Report from '../../api/reports';
 import { downloadCsvFile, generateFileName } from '../../helper/downloadHelper';
 import AnalyticsHelper from '../../helper/AnalyticsHelper';
 import { REPORTS_EVENTS } from '../../helper/AnalyticsHelper/events';
-import {
-  reconcileHeatmapData,
-  clampDataBetweenTimeline,
-} from 'shared/helpers/ReportsDataHelper';
+import { clampDataBetweenTimeline } from 'shared/helpers/ReportsDataHelper';
 
 const state = {
   fetchingStatus: false,
-  reportData: [],
   accountReport: {
-    isFetching: false,
-    data: [],
+    isFetching: {
+      conversations_count: false,
+      incoming_messages_count: false,
+      outgoing_messages_count: false,
+      avg_first_response_time: false,
+      avg_resolution_time: false,
+      resolutions_count: false,
+      bot_resolutions_count: false,
+      bot_handoffs_count: false,
+      reply_time: false,
+    },
+    data: {
+      conversations_count: [],
+      incoming_messages_count: [],
+      outgoing_messages_count: [],
+      avg_first_response_time: [],
+      avg_resolution_time: [],
+      resolutions_count: [],
+      bot_resolutions_count: [],
+      bot_handoffs_count: [],
+      reply_time: [],
+    },
   },
   accountSummary: {
     avg_first_response_time: 0,
@@ -22,7 +38,15 @@ const state = {
     conversations_count: 0,
     incoming_messages_count: 0,
     outgoing_messages_count: 0,
+    reply_time: 0,
     resolutions_count: 0,
+    bot_resolutions_count: 0,
+    bot_handoffs_count: 0,
+    previous: {},
+  },
+  botSummary: {
+    bot_resolutions_count: 0,
+    bot_handoffs_count: 0,
     previous: {},
   },
   overview: {
@@ -44,6 +68,9 @@ const getters = {
   getAccountSummary(_state) {
     return _state.accountSummary;
   },
+  getBotSummary(_state) {
+    return _state.botSummary;
+  },
   getAccountConversationMetric(_state) {
     return _state.overview.accountConversationMetric;
   },
@@ -60,12 +87,22 @@ const getters = {
 
 export const actions = {
   fetchAccountReport({ commit }, reportObj) {
-    commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, true);
+    const { metric } = reportObj;
+    commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, {
+      metric,
+      value: true,
+    });
     Report.getReports(reportObj).then(accountReport => {
       let { data } = accountReport;
       data = clampDataBetweenTimeline(data, reportObj.from, reportObj.to);
-      commit(types.default.SET_ACCOUNT_REPORTS, data);
-      commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, false);
+      commit(types.default.SET_ACCOUNT_REPORTS, {
+        metric,
+        data,
+      });
+      commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, {
+        metric,
+        value: false,
+      });
     });
   },
   fetchAccountConversationHeatmap({ commit }, reportObj) {
@@ -73,11 +110,6 @@ export const actions = {
     Report.getReports({ ...reportObj, groupBy: 'hour' }).then(heatmapData => {
       let { data } = heatmapData;
       data = clampDataBetweenTimeline(data, reportObj.from, reportObj.to);
-
-      data = reconcileHeatmapData(
-        data,
-        state.overview.accountConversationHeatmap
-      );
 
       commit(types.default.SET_HEATMAP_DATA, data);
       commit(types.default.TOGGLE_HEATMAP_LOADING, false);
@@ -94,6 +126,20 @@ export const actions = {
     )
       .then(accountSummary => {
         commit(types.default.SET_ACCOUNT_SUMMARY, accountSummary.data);
+      })
+      .catch(() => {
+        commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, false);
+      });
+  },
+  fetchBotSummary({ commit }, reportObj) {
+    Report.getBotSummary({
+      from: reportObj.from,
+      to: reportObj.to,
+      groupBy: reportObj.groupBy,
+      businessHours: reportObj.businessHours,
+    })
+      .then(botSummary => {
+        commit(types.default.SET_BOT_SUMMARY, botSummary.data);
       })
       .catch(() => {
         commit(types.default.TOGGLE_ACCOUNT_REPORT_LOADING, false);
@@ -180,7 +226,7 @@ export const actions = {
       });
   },
   downloadAccountConversationHeatmap(_, reportObj) {
-    Report.getConversationTrafficCSV()
+    Report.getConversationTrafficCSV({ daysBefore: reportObj.daysBefore })
       .then(response => {
         downloadCsvFile(
           generateFileName({
@@ -202,20 +248,23 @@ export const actions = {
 };
 
 const mutations = {
-  [types.default.SET_ACCOUNT_REPORTS](_state, accountReport) {
-    _state.accountReport.data = accountReport;
+  [types.default.SET_ACCOUNT_REPORTS](_state, { metric, data }) {
+    _state.accountReport.data[metric] = data;
   },
   [types.default.SET_HEATMAP_DATA](_state, heatmapData) {
     _state.overview.accountConversationHeatmap = heatmapData;
   },
-  [types.default.TOGGLE_ACCOUNT_REPORT_LOADING](_state, flag) {
-    _state.accountReport.isFetching = flag;
+  [types.default.TOGGLE_ACCOUNT_REPORT_LOADING](_state, { metric, value }) {
+    _state.accountReport.isFetching[metric] = value;
   },
   [types.default.TOGGLE_HEATMAP_LOADING](_state, flag) {
     _state.overview.uiFlags.isFetchingAccountConversationsHeatmap = flag;
   },
   [types.default.SET_ACCOUNT_SUMMARY](_state, summaryData) {
     _state.accountSummary = summaryData;
+  },
+  [types.default.SET_BOT_SUMMARY](_state, summaryData) {
+    _state.botSummary = summaryData;
   },
   [types.default.SET_ACCOUNT_CONVERSATION_METRIC](_state, metricData) {
     _state.overview.accountConversationMetric = metricData;
