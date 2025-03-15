@@ -1,6 +1,3 @@
-<template>
-  <span class="spinner" :class="`${size} ${colorScheme}`" />
-</template>
 <script>
 export default {
   props: {
@@ -13,10 +10,32 @@ export default {
       default: '',
     },
   },
+  computed: {
+    colorSchemeClasses() {
+      if (this.colorScheme === 'primary') {
+        return 'before:!border-t-woot-500';
+      }
+
+      if (this.colorScheme === 'warning') {
+        return 'before:!border-t-yellow-500';
+      }
+
+      if (this.colorScheme === 'success') {
+        return 'before:!border-t-success-500';
+      }
+
+      return this.colorScheme;
+    },
+  },
 };
 </script>
+
+<template>
+  <span class="spinner" :class="`${size} ${colorSchemeClasses}`" />
+</template>
+
 <style scoped lang="scss">
-@import '~widget/assets/scss/variables';
+@import 'widget/assets/scss/variables.scss';
 
 @mixin color-spinner() {
   @keyframes spinner {

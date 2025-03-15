@@ -1,138 +1,30 @@
-<template>
-  <div class="columns profile--settings">
-    <form v-if="!uiFlags.isFetchingItem" @submit.prevent="updateAccount">
-      <div class="small-12 row profile--settings--row">
-        <div class="columns small-3">
-          <h4 class="block-title">
-            {{ $t('GENERAL_SETTINGS.FORM.GENERAL_SECTION.TITLE') }}
-          </h4>
-          <p>{{ $t('GENERAL_SETTINGS.FORM.GENERAL_SECTION.NOTE') }}</p>
-        </div>
-        <div class="columns small-9 medium-5">
-          <label :class="{ error: $v.name.$error }">
-            {{ $t('GENERAL_SETTINGS.FORM.NAME.LABEL') }}
-            <input
-              v-model="name"
-              type="text"
-              :placeholder="$t('GENERAL_SETTINGS.FORM.NAME.PLACEHOLDER')"
-              @blur="$v.name.$touch"
-            />
-            <span v-if="$v.name.$error" class="message">
-              {{ $t('GENERAL_SETTINGS.FORM.NAME.ERROR') }}
-            </span>
-          </label>
-          <label :class="{ error: $v.locale.$error }">
-            {{ $t('GENERAL_SETTINGS.FORM.LANGUAGE.LABEL') }}
-            <select v-model="locale">
-              <option
-                v-for="lang in languagesSortedByCode"
-                :key="lang.iso_639_1_code"
-                :value="lang.iso_639_1_code"
-              >
-                {{ lang.name }}
-              </option>
-            </select>
-            <span v-if="$v.locale.$error" class="message">
-              {{ $t('GENERAL_SETTINGS.FORM.LANGUAGE.ERROR') }}
-            </span>
-          </label>
-          <label v-if="featureInboundEmailEnabled">
-            {{ $t('GENERAL_SETTINGS.FORM.FEATURES.INBOUND_EMAIL_ENABLED') }}
-          </label>
-          <label v-if="featureCustomReplyDomainEnabled">
-            {{
-              $t('GENERAL_SETTINGS.FORM.FEATURES.CUSTOM_EMAIL_DOMAIN_ENABLED')
-            }}
-          </label>
-          <label v-if="featureCustomReplyDomainEnabled">
-            {{ $t('GENERAL_SETTINGS.FORM.DOMAIN.LABEL') }}
-            <input
-              v-model="domain"
-              type="text"
-              :placeholder="$t('GENERAL_SETTINGS.FORM.DOMAIN.PLACEHOLDER')"
-            />
-          </label>
-          <label v-if="featureCustomReplyEmailEnabled">
-            {{ $t('GENERAL_SETTINGS.FORM.SUPPORT_EMAIL.LABEL') }}
-            <input
-              v-model="supportEmail"
-              type="text"
-              :placeholder="
-                $t('GENERAL_SETTINGS.FORM.SUPPORT_EMAIL.PLACEHOLDER')
-              "
-            />
-          </label>
-          <label
-            v-if="showAutoResolutionConfig"
-            :class="{ error: $v.autoResolveDuration.$error }"
-          >
-            {{ $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.LABEL') }}
-            <input
-              v-model="autoResolveDuration"
-              type="number"
-              :placeholder="
-                $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.PLACEHOLDER')
-              "
-              @blur="$v.autoResolveDuration.$touch"
-            />
-            <span v-if="$v.autoResolveDuration.$error" class="message">
-              {{ $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.ERROR') }}
-            </span>
-          </label>
-        </div>
-      </div>
-
-      <div class="profile--settings--row row">
-        <div class="columns small-3">
-          <h4 class="block-title">
-            {{ $t('GENERAL_SETTINGS.FORM.ACCOUNT_ID.TITLE') }}
-          </h4>
-          <p>
-            {{ $t('GENERAL_SETTINGS.FORM.ACCOUNT_ID.NOTE') }}
-          </p>
-        </div>
-        <div class="columns small-9 medium-5">
-          <woot-code :script="getAccountId" />
-        </div>
-      </div>
-      <div class="current-version">
-        <div>{{ `v${globalConfig.appVersion}` }}</div>
-        <div v-if="hasAnUpdateAvailable && globalConfig.displayManifest">
-          {{
-            $t('GENERAL_SETTINGS.UPDATE_CHATWOOT', {
-              latestChatwootVersion: latestChatwootVersion,
-            })
-          }}
-        </div>
-        <div class="build-id">
-          <div>{{ `Build ${globalConfig.gitSha}` }}</div>
-        </div>
-      </div>
-
-      <woot-submit-button
-        class="button nice success button--fixed-top"
-        :button-text="$t('GENERAL_SETTINGS.SUBMIT')"
-        :loading="isUpdating"
-      />
-    </form>
-
-    <woot-loading-state v-if="uiFlags.isFetchingItem" />
-  </div>
-</template>
-
 <script>
-import { required, minValue, maxValue } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required, minValue, maxValue } from '@vuelidate/validators';
 import { mapGetters } from 'vuex';
-import alertMixin from 'shared/mixins/alertMixin';
-import configMixin from 'shared/mixins/configMixin';
-import accountMixin from '../../../../mixins/account';
+import { useAlert } from 'dashboard/composables';
+import { useUISettings } from 'dashboard/composables/useUISettings';
+import { useConfig } from 'dashboard/composables/useConfig';
+import { useAccount } from 'dashboard/composables/useAccount';
 import { FEATURE_FLAGS } from '../../../../featureFlags';
-const semver = require('semver');
-import uiSettingsMixin from 'dashboard/mixins/uiSettings';
+import semver from 'semver';
 import { getLanguageDirection } from 'dashboard/components/widgets/conversation/advancedFilterItems/languages';
+import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
+import V4Button from 'dashboard/components-next/button/Button.vue';
 
 export default {
-  mixins: [accountMixin, alertMixin, configMixin, uiSettingsMixin],
+  components: {
+    BaseSettingsHeader,
+    V4Button,
+  },
+  setup() {
+    const { updateUISettings } = useUISettings();
+    const { enabledLanguages } = useConfig();
+    const { accountId } = useAccount();
+    const v$ = useVuelidate();
+
+    return { updateUISettings, v$, enabledLanguages, accountId };
+  },
   data() {
     return {
       id: '',
@@ -162,7 +54,6 @@ export default {
       globalConfig: 'globalConfig/get',
       getAccount: 'accounts/getAccount',
       uiFlags: 'accounts/getUIFlags',
-      accountId: 'getCurrentAccountId',
       isFeatureEnabledonAccount: 'accounts/isFeatureEnabledonAccount',
     }),
     showAutoResolutionConfig() {
@@ -192,7 +83,7 @@ export default {
     },
 
     featureInboundEmailEnabled() {
-      return !!this.features.inbound_emails;
+      return !!this.features?.inbound_emails;
     },
 
     featureCustomReplyDomainEnabled() {
@@ -212,14 +103,11 @@ export default {
     },
   },
   mounted() {
-    if (!this.id) {
-      this.initializeAccount();
-    }
+    this.initializeAccount();
   },
   methods: {
     async initializeAccount() {
       try {
-        await this.$store.dispatch('accounts/get');
         const {
           name,
           locale,
@@ -246,9 +134,9 @@ export default {
     },
 
     async updateAccount() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        this.showAlert(this.$t('GENERAL_SETTINGS.FORM.ERROR'));
+      this.v$.$touch();
+      if (this.v$.$invalid) {
+        useAlert(this.$t('GENERAL_SETTINGS.FORM.ERROR'));
         return;
       }
       try {
@@ -262,9 +150,9 @@ export default {
         this.$root.$i18n.locale = this.locale;
         this.getAccount(this.id).locale = this.locale;
         this.updateDirectionView(this.locale);
-        this.showAlert(this.$t('GENERAL_SETTINGS.UPDATE.SUCCESS'));
+        useAlert(this.$t('GENERAL_SETTINGS.UPDATE.SUCCESS'));
       } catch (error) {
-        this.showAlert(this.$t('GENERAL_SETTINGS.UPDATE.ERROR'));
+        useAlert(this.$t('GENERAL_SETTINGS.UPDATE.ERROR'));
       }
     },
 
@@ -278,29 +166,131 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '~dashboard/assets/scss/variables.scss';
-@import '~dashboard/assets/scss/mixins.scss';
+<template>
+  <div class="flex flex-col w-full">
+    <BaseSettingsHeader :title="$t('GENERAL_SETTINGS.TITLE')">
+      <template #actions>
+        <V4Button blue :loading="isUpdating" @click="updateAccount">
+          {{ $t('GENERAL_SETTINGS.SUBMIT') }}
+        </V4Button>
+      </template>
+    </BaseSettingsHeader>
+    <div class="flex-grow flex-shrink min-w-0 overflow-auto mt-3">
+      <form v-if="!uiFlags.isFetchingItem" @submit.prevent="updateAccount">
+        <div
+          class="flex flex-row border-b border-slate-25 dark:border-slate-800"
+        >
+          <div
+            class="flex-grow-0 flex-shrink-0 flex-[25%] min-w-0 py-4 pr-6 pl-0"
+          >
+            <h4 class="text-lg font-medium text-black-900 dark:text-slate-200">
+              {{ $t('GENERAL_SETTINGS.FORM.GENERAL_SECTION.TITLE') }}
+            </h4>
+            <p>{{ $t('GENERAL_SETTINGS.FORM.GENERAL_SECTION.NOTE') }}</p>
+          </div>
+          <div class="p-4 flex-grow-0 flex-shrink-0 flex-[50%]">
+            <label :class="{ error: v$.name.$error }">
+              {{ $t('GENERAL_SETTINGS.FORM.NAME.LABEL') }}
+              <input
+                v-model="name"
+                type="text"
+                :placeholder="$t('GENERAL_SETTINGS.FORM.NAME.PLACEHOLDER')"
+                @blur="v$.name.$touch"
+              />
+              <span v-if="v$.name.$error" class="message">
+                {{ $t('GENERAL_SETTINGS.FORM.NAME.ERROR') }}
+              </span>
+            </label>
+            <label :class="{ error: v$.locale.$error }">
+              {{ $t('GENERAL_SETTINGS.FORM.LANGUAGE.LABEL') }}
+              <select v-model="locale">
+                <option
+                  v-for="lang in languagesSortedByCode"
+                  :key="lang.iso_639_1_code"
+                  :value="lang.iso_639_1_code"
+                >
+                  {{ lang.name }}
+                </option>
+              </select>
+              <span v-if="v$.locale.$error" class="message">
+                {{ $t('GENERAL_SETTINGS.FORM.LANGUAGE.ERROR') }}
+              </span>
+            </label>
+            <label v-if="featureInboundEmailEnabled">
+              {{ $t('GENERAL_SETTINGS.FORM.FEATURES.INBOUND_EMAIL_ENABLED') }}
+            </label>
+            <label v-if="featureCustomReplyDomainEnabled">
+              {{
+                $t('GENERAL_SETTINGS.FORM.FEATURES.CUSTOM_EMAIL_DOMAIN_ENABLED')
+              }}
+            </label>
+            <label v-if="featureCustomReplyDomainEnabled">
+              {{ $t('GENERAL_SETTINGS.FORM.DOMAIN.LABEL') }}
+              <input
+                v-model="domain"
+                type="text"
+                :placeholder="$t('GENERAL_SETTINGS.FORM.DOMAIN.PLACEHOLDER')"
+              />
+            </label>
+            <label v-if="featureCustomReplyEmailEnabled">
+              {{ $t('GENERAL_SETTINGS.FORM.SUPPORT_EMAIL.LABEL') }}
+              <input
+                v-model="supportEmail"
+                type="text"
+                :placeholder="
+                  $t('GENERAL_SETTINGS.FORM.SUPPORT_EMAIL.PLACEHOLDER')
+                "
+              />
+            </label>
+            <label
+              v-if="showAutoResolutionConfig"
+              :class="{ error: v$.autoResolveDuration.$error }"
+            >
+              {{ $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.LABEL') }}
+              <input
+                v-model="autoResolveDuration"
+                type="number"
+                :placeholder="
+                  $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.PLACEHOLDER')
+                "
+                @blur="v$.autoResolveDuration.$touch"
+              />
+              <span v-if="v$.autoResolveDuration.$error" class="message">
+                {{ $t('GENERAL_SETTINGS.FORM.AUTO_RESOLVE_DURATION.ERROR') }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </form>
 
-.profile--settings {
-  padding: 24px;
-  overflow: auto;
-}
+      <woot-loading-state v-if="uiFlags.isFetchingItem" />
+    </div>
 
-.profile--settings--row {
-  @include border-normal-bottom;
-  padding: $space-normal;
-  .small-3 {
-    padding: $space-normal $space-medium $space-normal 0;
-  }
-  .small-9 {
-    padding: $space-normal;
-  }
-}
-
-.current-version {
-  font-size: var(--font-size-small);
-  text-align: center;
-  padding: var(--space-normal);
-}
-</style>
+    <div class="flex flex-row">
+      <div class="flex-grow-0 flex-shrink-0 flex-[25%] min-w-0 py-4 pr-6 pl-0">
+        <h4 class="text-lg font-medium text-black-900 dark:text-slate-200">
+          {{ $t('GENERAL_SETTINGS.FORM.ACCOUNT_ID.TITLE') }}
+        </h4>
+        <p>
+          {{ $t('GENERAL_SETTINGS.FORM.ACCOUNT_ID.NOTE') }}
+        </p>
+      </div>
+      <div class="p-4 flex-grow-0 flex-shrink-0 flex-[50%]">
+        <woot-code :script="getAccountId" />
+      </div>
+    </div>
+    <div class="p-4 text-sm text-center">
+      <div>{{ `v${globalConfig.appVersion}` }}</div>
+      <div v-if="hasAnUpdateAvailable && globalConfig.displayManifest">
+        {{
+          $t('GENERAL_SETTINGS.UPDATE_CHATWOOT', {
+            latestChatwootVersion: latestChatwootVersion,
+          })
+        }}
+      </div>
+      <div class="build-id">
+        <div>{{ `Build ${globalConfig.gitSha}` }}</div>
+      </div>
+    </div>
+  </div>
+</template>

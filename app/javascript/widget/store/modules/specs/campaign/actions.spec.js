@@ -2,12 +2,16 @@ import { API } from 'widget/helpers/axios';
 import { actions } from '../../campaign';
 import { campaigns } from './data';
 
-const commit = jest.fn();
-const dispatch = jest.fn();
-jest.mock('widget/helpers/axios');
+const commit = vi.fn();
+const dispatch = vi.fn();
+vi.mock('widget/helpers/axios');
 
 import campaignTimer from 'widget/helpers/campaignTimer';
-jest.mock('widget/helpers/campaignTimer');
+vi.mock('widget/helpers/campaignTimer', () => ({
+  default: {
+    initTimers: vi.fn().mockReturnValue({ mock: true }),
+  },
+}));
 
 describe('#actions', () => {
   describe('#fetchCampaigns', () => {
@@ -59,15 +63,37 @@ describe('#actions', () => {
     };
     it('sends correct actions if campaigns are empty', async () => {
       await actions.initCampaigns(
-        { dispatch, getters: { getCampaigns: [] } },
+        {
+          dispatch,
+          getters: { getCampaigns: [], getUIFlags: { hasFetched: false } },
+        },
         actionParams
       );
       expect(dispatch.mock.calls).toEqual([['fetchCampaigns', actionParams]]);
       expect(campaignTimer.initTimers).not.toHaveBeenCalled();
     });
+
+    it('do not refetch if the campaigns are fetched once', async () => {
+      await actions.initCampaigns(
+        {
+          dispatch,
+          getters: { getCampaigns: [], getUIFlags: { hasFetched: true } },
+        },
+        actionParams
+      );
+      expect(dispatch.mock.calls).toEqual([]);
+      expect(campaignTimer.initTimers).not.toHaveBeenCalled();
+    });
+
     it('resets time if campaigns are available', async () => {
       await actions.initCampaigns(
-        { dispatch, getters: { getCampaigns: campaigns } },
+        {
+          dispatch,
+          getters: {
+            getCampaigns: campaigns,
+            getUIFlags: { hasFetched: true },
+          },
+        },
         actionParams
       );
       expect(dispatch.mock.calls).toEqual([]);
