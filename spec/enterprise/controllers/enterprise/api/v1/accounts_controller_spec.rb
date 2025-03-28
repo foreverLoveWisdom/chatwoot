@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Enterprise Billing APIs', type: :request do
   let(:account) { create(:account) }
-  let(:admin) { create(:user, account: account, role: :administrator) }
-  let(:agent) { create(:user, account: account, role: :agent) }
+  let!(:admin) { create(:user, account: account, role: :administrator) }
+  let!(:agent) { create(:user, account: account, role: :agent) }
 
   describe 'POST /enterprise/api/v1/accounts/{account.id}/subscription' do
     context 'when it is an unauthenticated user' do
@@ -106,6 +106,137 @@ RSpec.describe 'Enterprise Billing APIs', type: :request do
           expect(response).to have_http_status(:success)
           json_response = JSON.parse(response.body)
           expect(json_response['redirect_url']).to eq('https://billing.stripe.com/random_string')
+        end
+      end
+    end
+  end
+
+  describe 'GET /enterprise/api/v1/accounts/{account.id}/limits' do
+    context 'when it is an unauthenticated user' do
+      it 'returns unauthorized' do
+        get "/enterprise/api/v1/accounts/#{account.id}/limits", as: :json
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when it is an authenticated user' do
+      before do
+        InstallationConfig.where(name: 'DEPLOYMENT_ENV').first_or_create(value: 'cloud')
+        InstallationConfig.where(name: 'CHATWOOT_CLOUD_PLANS').first_or_create(value: [{ 'name': 'Hacker' }])
+      end
+
+      context 'when it is an agent' do
+        it 'returns unauthorized' do
+          get "/enterprise/api/v1/accounts/#{account.id}/limits",
+              headers: agent.create_new_auth_token,
+              as: :json
+
+          expect(response).to have_http_status(:success)
+          json_response = JSON.parse(response.body)
+          expect(json_response['id']).to eq(account.id)
+          expect(json_response['limits']).to eq(
+            {
+              'conversation' => {
+                'allowed' => 500,
+                'consumed' => 0
+              },
+              'non_web_inboxes' => {
+                'allowed' => 0,
+                'consumed' => 0
+              },
+              'agents' => {
+                'allowed' => 2,
+                'consumed' => 2
+              }
+            }
+          )
+        end
+      end
+
+      context 'when it is an admin' do
+        before do
+          create(:conversation, account: account)
+          create(:channel_api, account: account)
+          InstallationConfig.where(name: 'DEPLOYMENT_ENV').first_or_create(value: 'cloud')
+          InstallationConfig.where(name: 'CHATWOOT_CLOUD_PLANS').first_or_create(value: [{ 'name': 'Hacker' }])
+        end
+
+        it 'returns the limits if the plan is default' do
+          account.update!(custom_attributes: { plan_name: 'Hacker' })
+          get "/enterprise/api/v1/accounts/#{account.id}/limits",
+              headers: admin.create_new_auth_token,
+              as: :json
+
+          expected_response = {
+            'id' => account.id,
+            'limits' => {
+              'conversation' => {
+                'allowed' => 500,
+                'consumed' => 1
+              },
+              'non_web_inboxes' => {
+                'allowed' => 0,
+                'consumed' => 1
+              },
+              'agents' => {
+                'allowed' => 2,
+                'consumed' => 2
+              }
+            }
+          }
+
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it 'returns nil if the plan is not default' do
+          account.update!(custom_attributes: { plan_name: 'Startups' })
+          get "/enterprise/api/v1/accounts/#{account.id}/limits",
+              headers: admin.create_new_auth_token,
+              as: :json
+
+          expected_response = {
+            'id' => account.id,
+            'limits' => {
+              'agents' => {},
+              'conversation' => {},
+              'captain' => {
+                'documents' => { 'consumed' => 0, 'current_available' => ChatwootApp.max_limit, 'total_count' => ChatwootApp.max_limit },
+                'responses' => { 'consumed' => 0, 'current_available' => ChatwootApp.max_limit, 'total_count' => ChatwootApp.max_limit }
+              },
+              'non_web_inboxes' => {}
+            }
+          }
+
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it 'returns limits if a plan is not configured' do
+          get "/enterprise/api/v1/accounts/#{account.id}/limits",
+              headers: admin.create_new_auth_token,
+              as: :json
+
+          expected_response = {
+            'id' => account.id,
+            'limits' => {
+              'conversation' => {
+                'allowed' => 500,
+                'consumed' => 1
+              },
+              'non_web_inboxes' => {
+                'allowed' => 0,
+                'consumed' => 1
+              },
+              'agents' => {
+                'allowed' => 2,
+                'consumed' => 2
+              }
+            }
+          }
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to eq(expected_response)
         end
       end
     end

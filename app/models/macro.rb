@@ -21,7 +21,7 @@ class Macro < ApplicationRecord
 
   belongs_to :account
   belongs_to :created_by,
-             class_name: :User, optional: true
+             class_name: :User, optional: true, inverse_of: :macros
   belongs_to :updated_by,
              class_name: :User, optional: true
   has_many_attached :files
@@ -40,7 +40,7 @@ class Macro < ApplicationRecord
 
   def self.with_visibility(user, _params)
     records = Current.account.macros.global
-    records = records.or(personal.where(created_by_id: user.id))
+    records = records.or(personal.where(created_by_id: user.id, account_id: Current.account.id))
     records.order(:id)
   end
 
@@ -73,3 +73,5 @@ class Macro < ApplicationRecord
     errors.add(:actions, "Macro execution actions #{actions.join(',')} not supported.") if actions.any?
   end
 end
+
+Macro.include_mod_with('Audit::Macro')
