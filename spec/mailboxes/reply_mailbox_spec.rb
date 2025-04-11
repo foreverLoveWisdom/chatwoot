@@ -86,6 +86,9 @@ RSpec.describe ReplyMailbox do
 
         html_full_content = conversation.messages.last.content_attributes[:email][:html_content][:full]
         expect(html_full_content).to include('img')
+        expect(html_full_content).not_to include('cid:ii_lm7fuura0')
+        expect(html_full_content).not_to include('cid:ii_lm7fuuvm1')
+        expect(html_full_content).not_to include('cid:ii_lm7fuuwn2')
       end
     end
 
@@ -105,8 +108,34 @@ RSpec.describe ReplyMailbox do
         text_full_content = conversation.messages.last.content_attributes[:email][:text_content][:full]
 
         expect(text_full_content).to include('img')
+        expect(text_full_content).not_to include('[image: poster (8).jpg]')
+        expect(text_full_content).not_to include('[image: poster (7).jpg]')
+        expect(text_full_content).not_to include('[image: poster (1).jpg]')
         expect(conversation.messages.last.content).to include("Let's add no HTML content here, just plain text and images")
         expect(conversation.messages.last.attachments.count).to eq(0)
+      end
+    end
+
+    context 'with inline attachments and html_part' do
+      let(:mail_with_html_part_no_html_content) { create_inbound_email_from_fixture('mail_with_html_part_no_html_content.eml') }
+      let(:described_subject) { described_class.receive mail_with_html_part_no_html_content }
+
+      before do
+        conversation.uuid = '6bdc3f4d-0bed-4515-a284-5d916fdde489'
+        conversation.save!
+
+        described_subject
+      end
+
+      it 'mail content will create message' do
+        expect(conversation.messages.last.content).to include('This is test message.')
+      end
+
+      it 'html_content is empty' do
+        expect(conversation.messages.last.attachments.count).to eq(0)
+
+        html_full_content = conversation.messages.last.content_attributes[:email][:html_content][:full]
+        expect(html_full_content).to be_nil
       end
     end
 
